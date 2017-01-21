@@ -16,11 +16,14 @@ another variable called 'inner'. */
 
 // Code Here
 
+var inner = outer ();
+
 //Once you do that, invoke inner.
+
 
 //Code Here
 
-
+inner();
 
 
 
@@ -49,12 +52,12 @@ in your console. */
 
   //Code Here
 
+function makeCall () {
+  var friend = callFriend ();
+  console.log(friend("435-215-9248"));
+}
 
-
-
-
-
-
+makeCall();
 
 
 
@@ -68,12 +71,21 @@ properly. */
 
 //Code Here
 
+function makeCounter() {
+  var result = 0;
+  return function () {
+    result += 1;
+    console.log(result);
+    return result;
+  }
+}
+
 //Uncomment this once you make your function
-//   var count = makeCounter();
-//   count(); // 1
-//   count(); // 2
-//   count(); // 3
-//   count(); // 4
+  var count = makeCounter();
+  count(); // 1
+  count(); // 2
+  count(); // 3
+  count(); // 4
 
 
 
@@ -97,19 +109,25 @@ the module pattern to achieve this. */
 
 function counterFactory(value) {
 
-  // Code here.
-
+  // Code here
 
   return {
+    inc: function () {
+      return value +=1;
+      console.log(value);
+    },
+    dec: function () {
+      return value -=1;
+      console.log(value);
+    }
   }
 }
 
 
-counter = counterFactory(10);
-
-
-
-
+var counter = counterFactory(10);
+counter.inc(); // 11
+counter.dec(); // 10
+counter.dec(); // 9
 
 
 
@@ -129,14 +147,16 @@ function motivation(firstname, lastname){
   var welcomeText = 'You\'re doing awesome, keep it up ';
 
   // code message function here.
-
+  function message () {
+    return welcomeText + firstname + " " + lastname + ".";
+  }
 
   //Uncommment this to return the value of your invoked message function
-  //return message();
+  return message();
 
 }
 
-motivation('Billy', 'Bob'); // 'Your doing awesome keep it up Billy Bob
+console.log(motivation('Billy', 'Bob')); // 'Your doing awesome keep it up Billy Bob
 
 
 
@@ -172,12 +192,15 @@ var module = (function() {
 
   return {
     // Code here.
+    publicMethod: function (){
+      return privateMethod();
+    }
   };
 
 })();
 
 // Uncomment this after you create your public method
-//   module.publicMethod();
+  console.log(module.publicMethod());
 
 
 
@@ -200,14 +223,13 @@ then 3, etc). Run this code in your console to see what the output is. */
 // To make this code work you will need to create a new scope for every iteration.
 function timeOutCounter() {
   for (var i = 0; i <= 5; i++) {
-    setTimeout(function() {
-      console.log(i);
-    }, i * 1000)
+    setTimeout(newScope(i) , i * 1000)
   }
-
   function newScope(i) {
+    return function() {
     console.log(i)
   }
+}
 }
 timeOutCounter();
 
@@ -219,11 +241,21 @@ timeOutCounter();
 /******************************************************************************\
 	#PROBLEM-08
 \******************************************************************************/
+function scopeFactory (whateverIWant) {
+  return function (){
+    return whateverIWant;
+  }
+}
 
 var funcArray = [];
+// var counter = 0;
+for (var i=0; i < 6; i++) {
+      funcArray.push(scopeFactory(i));
+      console.log(i);
+}
 
-/*
-  Make the following code work
+
+  // Make the following code work
 
   funcArray[0]() //0
   funcArray[1]() //1
@@ -232,5 +264,4 @@ var funcArray = [];
   funcArray[4]() //4
   funcArray[5]() //5
 
-  *Hint: Don't let this fool you. Break down what's really happening here.
-*/
+  // *Hint: Don't let this fool you. Break down what's really happening here.
